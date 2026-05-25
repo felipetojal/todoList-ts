@@ -44,6 +44,26 @@ async function createTodo(id: number): Promise<ToDo> {
     return todo;
 }
 
+function completeToDo(id: number, toDos: ToDo[]): void {
+    // Checking for index error.
+    if (id < 0) {
+        throw new Error("Invalid ID");
+    }
+
+    // If the conditions are met, returns the wanted object.
+    // If not, returns undefined.
+    let todo = toDos.find((todo) => todo.id === id);
+    
+    // In TS/JS, everything is mapped to "true" or "false".
+    // Since undefined, null, NaN, "", 0 and false are read as 
+    // a False statement, everything else is true.
+    if (!todo) {
+        throw new Error(`ToDo with id ${id} was not found!`);
+    }
+
+    todo.status = "completed";
+}
+
 async function main() {
     let option = 0;
     let idCounter = 1;
@@ -78,6 +98,15 @@ async function main() {
                 break;
             case 2:
                 toDos.forEach((toDo) => console.log(toDo));
+                break;
+            case 3:
+                try {
+                    const todoIdString = await askQuestion("What is the ToDo id?");
+                    let todoId = parseInt(todoIdString, 10);
+                    completeToDo(todoId, toDos);
+                } catch (error) {
+                    console.error("Error completing ToDo");
+                }
                 break;
             default:
                 break;
