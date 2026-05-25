@@ -64,6 +64,24 @@ function completeToDo(id: number, toDos: ToDo[]): void {
     todo.status = "completed";
 }
 
+function deleteToDo(id: number, toDos: ToDo[]): void {
+    // Checking for index error.
+    if (id < 0) {
+        throw new Error("Invalid ID");
+    }
+
+    // Searching for the index of the ToDo
+    let index = toDos.findIndex((todo) => todo.id == id);
+    if (index == -1) {
+        throw new Error("ToDo not found");
+    }
+
+    // "Go exactly to position 'index' and delete '1' instance"
+    toDos.splice(index, 1);
+
+    console.log("Deleted successfully");
+}
+
 async function main() {
     let option = 0;
     let idCounter = 1;
@@ -106,6 +124,15 @@ async function main() {
                     completeToDo(todoId, toDos);
                 } catch (error) {
                     console.error("Error completing ToDo");
+                }
+                break;
+            case 4:
+                try {
+                    const idString = await askQuestion("What is the ToDo id?");
+                    let todoId = parseInt(idString, 10);
+                    deleteToDo(todoId, toDos);
+                } catch (error) {
+                    console.error("Unable to delete ToDo!");
                 }
                 break;
             default:
